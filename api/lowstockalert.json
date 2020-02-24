@@ -1,0 +1,14 @@
+{
+    "machine_id":   "123",
+    "timestamp":    "1576669236283",
+    "stock": [
+        {
+                    "product": "tea",
+                    "stock": 23
+        },
+        {
+                    "product": "milk",
+                    "stock": 5
+        }
+    ]
+}
