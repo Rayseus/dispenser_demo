@@ -6,8 +6,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 //import './style.css';
 import axios from 'axios';
+import './mock-api.js'
 import Form from 'react-bootstrap/Form'
-import './mock-api'
+
 
 const messagesPassive = ['Please select' , 'You can add milk and sugar or continue' , ''];
 const messageDynamicPre=['You have selected a cup of', 'Your', ''];
