@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 //import './style.css';
 import axios from 'axios';
-import './mock-api.js'
 import Form from 'react-bootstrap/Form'
 
 
@@ -66,14 +65,14 @@ class Dispenser extends Component {
 
     componentDidMount() {
 
-        axios.get(`http://localhost:3000/stock`)
+        axios.get(`http://localhost:4000/stock`) 
         .then(response => {
             console.log(response);
           this.setState({ stocks: response.data });
         })
        .catch(error =>{
            console.log(error)
-            this.setState({errorMsg: 'Error retrieving data'})
+            this.setState({errorMsg: 'some error'})
        });
 
        this.intervalID = setInterval(
@@ -96,7 +95,7 @@ class Dispenser extends Component {
         10000
       );
     
-        fetch('http://localhost:4000/temp')//4000
+        fetch('http://localhost:4000/temp')//http://localhost:4000/temp
         .then(res => res.json())
         .then(json =>{
             this.setState({
@@ -106,7 +105,7 @@ class Dispenser extends Component {
         }); 
         
         
-        fetch('http://localhost:3000/stock?stock_lte=25')
+        fetch('http://localhost:4000/stock?stock_lte=5') //http://localhost:3000/stock?stock_lte=25
         .then(res => res.json())
         .then(json =>{
             this.setState({
@@ -116,7 +115,7 @@ class Dispenser extends Component {
         }); 
 
   
-        fetch('http://localhost:4000/temp?_limit=30')//4000
+        fetch('http://localhost:4000/temp?_limit=30')//http://localhost:4000/temp?_limit=30
         .then(res => res.json())
         .then(json =>{
             this.setState({
@@ -141,7 +140,7 @@ class Dispenser extends Component {
       }
 
       postTemp(){
-        fetch('http://localhost:4000/temp/', { //4000
+        fetch('http://localhost:4000/temp/', { //http://localhost:4000/temp/
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -152,6 +151,7 @@ class Dispenser extends Component {
             temp: this.state.temperature,
           })
         })
+        console.log('send')
       }
 
       tick() {
@@ -286,6 +286,9 @@ class Dispenser extends Component {
                   messagebox2:this.state.messageDynamicPre[0]
                 }
               });
+
+              this.refreshStock();
+              console.log(this.state.stocks)
               
               
       }
@@ -312,7 +315,7 @@ class Dispenser extends Component {
         this.setState({
           [name]: value
         });
-        console.log(value);
+        //console.log(value);
         var wit = "with " + name 
         if(value === true){
           this.setState((prevState) => {
@@ -379,8 +382,7 @@ class Dispenser extends Component {
                         <div>
                             <Button variant="primary" value="tea" onClick={this.handleToggleVisibility} size="lg" block>Tea </Button>
                             <Button variant="primary" value="coffee" onClick={this.handleToggleVisibility} size="lg" block>Coffee</Button>
-                            <div></div>
-                            <Button variant="primary" value="coffee" onClick={this.handleMaintainanceToggle}>Maintainance</Button>
+                            <Button variant="secondary" value="coffee" onClick={this.handleMaintainanceToggle} size="lg" block>Maintainance</Button>
 
 
                         </div>
@@ -397,7 +399,7 @@ class Dispenser extends Component {
                               type="checkbox"
                               checked={this.state.Milk}
                               onChange={this.handleInputChange} />
-                          <label for="milk" className="btn btn-primary btn-block btn-lg sugar">Milk</label>
+                          <label htmlFor="milk" className="btn btn-primary btn-block btn-lg sugar">Milk</label>
 
                          
                            
@@ -407,7 +409,7 @@ class Dispenser extends Component {
                               type="checkbox"
                               checked={this.state.Sugar}
                               onChange={this.handleInputChange2} />
-                           <label for="sugar" className="btn btn-primary btn-block btn-lg milk"> Sugar</label>
+                           <label htmlFor="sugar" className="btn btn-primary btn-block btn-lg milk"> Sugar</label>
 
 
 
@@ -458,21 +460,18 @@ class Dispenser extends Component {
                             <h3>Products Low on stock</h3>
                           <ul>
                             
-                            {lowstocks.map(lowstock => (
+                            { lowstocks.map(lowstock => (
                                     <li key={lowstock.id}>
-                                    
                                          {lowstock.product} | stock left: {lowstock.stock} 
                                     </li>
                             ))}
                           </ul>
                           
                           <ul>
-                            <h3>Last Temparature 30 Readings </h3>
-                            {last30temps.map(last30temp => (
+                            <h3>Temparature Readings </h3>
+                            { last30temps.map(last30temp => (
                                     <li key={last30temp.id}>
-                                    
-                                         Time : {last30temp.timestamp} | Temparature: {last30temp.temp} 
-                                         <br/>
+                                        Time : {last30temp.timestamp} | Temparature: {last30temp.temperature} <br/>
                                     </li>
                             ))}
                           </ul>
