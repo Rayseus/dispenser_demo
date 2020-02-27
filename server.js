@@ -28,7 +28,7 @@ app.use(bodyParser.json())
 
 //get temperature from front-end recorded
 app.post('/temp', function(req, res) {
-    timestamp = req.body.timestamp
+    timestamp = new Date(req.body.timestamp).toLocaleTimeString()
     temp = req.body.temp
     console.log(req.body)
 })

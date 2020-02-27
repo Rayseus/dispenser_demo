@@ -195,11 +195,14 @@ class Dispenser extends Component {
         })
     }
 
-    refreshStock(name) {
+    refreshStock(name, added) {
         //deep copy edited data
         let data = JSON.parse(JSON.stringify(this.state.stocks))
         //using map to select correct data to edit stock due to map will return a new array which can be set as new stocks state
-        data = data.map((item) => item.product === name ? { ...item, stock: item.stock - 1 } : item)
+        if (added)
+          data = data.map((item) => item.product === name ? { ...item, stock: item.stock - 1 } : item)
+        else
+          data = data.map((item) => item.product === name ? { ...item, stock: item.stock + 1 } : item)
         setTimeout(()=>{
             this.setState({
                 stocks: data
@@ -238,12 +241,12 @@ class Dispenser extends Component {
 
         this.setState((prevState) => {
             return {
-                screen2visibility: !prevState.screen2visibility,
+                screen2visibility: !prevState.screen2visibility
             };
         });
         this.setState((prevState) => {
             return {
-                Screen2disability: !prevState.screen2visibility,
+                Screen2disability: !prevState.screen2visibility
             };
         });
 
@@ -256,23 +259,22 @@ class Dispenser extends Component {
         });
         this.setState((prevState) => {
             return {
-                maintainanceScreen: !prevState.maintainanceScreen,
+                maintainanceScreen: true
             };
         });
 
-        this.refreshStock(screen1val);
+        this.refreshStock(screen1val, true);
 
     }
 
     //back to tea or coffee selection screen, stocks level will restore
     handleGoBackVisibility() {
-        setTimeout(()=>{
-            this.setState((prevState) => {
-                return {
-                    stocks: this.state.prev_stocks
-                };
-            })
-        }, 0);
+        this.setState((prevState) => {
+            return {
+                stocks: this.state.prev_stocks,
+                maintainanceScreen: !prevState.maintainanceScreen
+            };
+        })
 
         this.setState((prevState) => {
             return {
@@ -286,7 +288,7 @@ class Dispenser extends Component {
         });
         this.setState({
             messagebox: this.state.messagesPassive[0],
-            messagebox2: this.state.messageDynamicPre[2],
+            messagebox2: this.state.messageDynamicPre[2]
         });
     }
 
@@ -370,7 +372,10 @@ class Dispenser extends Component {
                 messagebox3: ''
             })
         }
-        this.refreshStock(name);
+        if (target.checked)
+          this.refreshStock(name, true);
+        else
+          this.refreshStock(name, false);
     }
 
     //sugar selection with stock level handling
@@ -396,7 +401,10 @@ class Dispenser extends Component {
                 messagebox4: ''
             })
         }
-        this.refreshStock(name);
+        if (target.checked)
+          this.refreshStock(name, true);
+        else
+          this.refreshStock(name, false);
     }
 
     SubmitHandler = e => {
