@@ -1,10 +1,22 @@
+/*
+Date: Feb.26.2020
+Author: Ray
+This App is a beverage dispenser simulator with maintainance display,
+which inclused dispensing tea or coffee with the option to include mild and/or sugar
+The dispenser will keep watching those items' stocks level and make a warning when stock lower than 25
+Besides, the dispenser will display water temperature every minute and record recent temperatures
+
+Usage: 
+1. node server.js
+2. yarn
+3. yarn start
+*/
 import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
-//import './style.css';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form'
 
@@ -46,7 +58,6 @@ class Dispenser extends Component {
             time: new Date().toLocaleTimeString(),
 
             messagesPassive,
-
             messagebox: messagesPassive[0],
             messagebox2: '',
             messagebox3: '',
@@ -60,7 +71,7 @@ class Dispenser extends Component {
     }
 
     componentDidMount() {
-
+        //axio using GET to get mock data form node server
         axios.get(`http://localhost:4000/stock`)
             .then(res => {
                 console.log(res);
@@ -73,9 +84,10 @@ class Dispenser extends Component {
                 console.log(error)
                 this.setState({ errorMsg: 'some error' })
             });
-
+        //display items' stock level
         this.getLowStock()
-
+        
+        //set interval for those function might run every certain time
         this.intervalID = setInterval(
             () => this.tick(),
             1000
@@ -120,6 +132,7 @@ class Dispenser extends Component {
         clearInterval(this.getTemp);
     }
 
+    //using POST to post temperature data to node server
     postTemp() {
         fetch('http://localhost:4000/temp', {
             method: 'POST',
@@ -137,6 +150,7 @@ class Dispenser extends Component {
             .catch(error => console.error('Error:', error));
     }
 
+    //get temperature info from node server
     getTemp() {
         fetch('http://localhost:4000/temp')
             .then(res => res.json())
@@ -150,6 +164,7 @@ class Dispenser extends Component {
             }).catch(err => console.log(err));
     }
 
+    //using array filter to select low stock items
     getLowStock() {
         let stock_low = this.state.stocks.filter((e) => e.stock < 10)
         this.setState({
@@ -179,7 +194,7 @@ class Dispenser extends Component {
     refreshStock(name) {
         //deep copy edited data
         let data = JSON.parse(JSON.stringify(this.state.stocks))
-
+        //using map to select correct data to edit stock due to map will return a new array which can be set as new stocks state
         data = data.map((item) => item.product === name ? { ...item, stock: item.stock - 1 } : item)
         setTimeout(()=>{
             this.setState({
@@ -188,6 +203,7 @@ class Dispenser extends Component {
         }, 0);
     }
 
+    //refresh temperature with random
     refreshTemp() {
         let min = 90.99,
             max = 99.99,
@@ -201,6 +217,8 @@ class Dispenser extends Component {
         });
     }
 
+    //handle function for button, including each button logic and functional setting
+    //maintinance button, show up and close maintainance display
     handleMaintainanceToggle() {
         this.setState((prevState) => {
             return {
@@ -209,6 +227,8 @@ class Dispenser extends Component {
         });
     }
 
+    //tea or coffee selection, will lead to another screen for milk and/or sugar selection
+    //besides stock level will be handed in this function once selected
     handleToggleVisibility(e) {
         const screen1val = e.target.value;
 
@@ -240,6 +260,7 @@ class Dispenser extends Component {
 
     }
 
+    //back to tea or coffee selection screen, stocks level will restore
     handleGoBackVisibility() {
         setTimeout(()=>{
             this.setState((prevState) => {
@@ -265,6 +286,7 @@ class Dispenser extends Component {
         });
     }
 
+    //despensing handle, will confirm stock level change, enjoy your drink
     handleDespensing(e) {
         this.setState((prevState) => {
             return {
@@ -309,6 +331,7 @@ class Dispenser extends Component {
         })
     }
 
+    //back to tea or coffee selection
     handleBackToStart() {
         this.setState((prevState) => {
             return {
@@ -320,7 +343,7 @@ class Dispenser extends Component {
         });
     }
 
-
+    //milk selection with stock level handling
     handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -345,6 +368,8 @@ class Dispenser extends Component {
         }
         this.refreshStock(name);
     }
+
+    //sugar selection with stock level handling
     handleInputChange2(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
