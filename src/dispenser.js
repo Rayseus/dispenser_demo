@@ -150,11 +150,15 @@ class Dispenser extends Component {
             .catch(error => console.error('Error:', error));
     }
 
-    //get temperature info from node server
+    //get temperature info from node server, handle display recent 15 tempratures data
     getTemp() {
         fetch('http://localhost:4000/temp')
             .then(res => res.json())
             .then(json => {
+                if (this.state.temps.length > 15){
+                    this.state.temps.shift()
+                }
+                
                 let join = this.state.temps.concat(json)
                 this.setState({
                     isLoaded: true,
@@ -485,7 +489,7 @@ class Dispenser extends Component {
                                     </p>
 
 
-                                    <p>These products &#40; {lowstocks.map(lowstock => (<span key={lowstock.id}>{lowstock.product} | stock left: {lowstock.stock}; </span>))} &#41;	 are low </p>
+                                    <p>Dispenser machine id:123 with &#40; {lowstocks.map(lowstock => (<span key={lowstock.id}>{lowstock.product} | stock left: {lowstock.stock}; </span>))} &#41;	 are low </p>
                                 </div>
                                 {this.state.maintainanceScreen && (
                                     <div>
@@ -499,8 +503,8 @@ class Dispenser extends Component {
                                             ))}
                                         </ul>
 
+                                        <h3>Temparature Readings </h3>
                                         <ul>
-                                            <h3>Temparature Readings </h3>
                                             {temps.map(temp => (
                                                 <li key={temp.id}>
                                                     Time : {temp.timestamp} | Temparature: {temp.temp} <br />
