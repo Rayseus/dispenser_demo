@@ -155,22 +155,23 @@ class Dispenser extends Component {
         fetch('http://localhost:4000/temp')
             .then(res => res.json())
             .then(json => {
-                if (this.state.temps.length > 15){
-                    this.state.temps.shift()
+                let temp = this.state.temps
+                if (temp.length > 15){
+                    temp.shift()
                 }
                 
-                let join = this.state.temps.concat(json)
+                let join = temp.concat(json)
                 this.setState({
                     isLoaded: true,
                     temps: join
                 });
-                console.log(this.state.temps)
+                console.log(temp)
             }).catch(err => console.log(err));
     }
 
     //using array filter to select low stock items
     getLowStock() {
-        let stock_low = this.state.stocks.filter((e) => e.stock < 10)
+        let stock_low = this.state.stocks.filter((e) => e.stock < 25)
         this.setState({
             isLoaded: true,
             lowstocks: stock_low

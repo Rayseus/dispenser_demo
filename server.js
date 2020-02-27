@@ -37,7 +37,7 @@ app.post('/temp', function(req, res) {
 app.use('/temp', function(req, res) {
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Accept', 'application/json')
-    id ++
+    id = id + 1
     res.json({
         "id": id,
         "timestamp": timestamp,
