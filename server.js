@@ -50,12 +50,12 @@ app.use('/stock',function(req, res){
         {
             "id": 3,
             "product": "milk",
-            "stock": 5
+            "stock": 10
         },
         {
             "id": 4,
             "product": "sugar",
-            "stock": 5
+            "stock": 10
         }
     ]))
 })
