@@ -2,7 +2,7 @@
 Date: Feb.26.2020
 Author: Ray
 This App is a beverage dispenser simulator with maintainance display,
-which inclused dispensing tea or coffee with the option to include mild and/or sugar
+which included dispensing tea or coffee with the option to include mild and/or sugar
 The dispenser will keep watching those items' stocks level and make a warning when stock lower than 25
 Besides, the dispenser will display water temperature every minute and record recent temperatures
 
@@ -146,8 +146,7 @@ class Dispenser extends Component {
                     timestamp: this.state.timestamp,
                     temp: this.state.temperature,
                 })
-        }).then(res => res.json())
-            .catch(error => console.error('Error:', error));
+        })
     }
 
     //get temperature info from node server, handle display recent 15 tempratures data
@@ -156,7 +155,7 @@ class Dispenser extends Component {
             .then(res => res.json())
             .then(json => {
                 let temp = this.state.temps
-                if (temp.length > 15){
+                if (temp.length > 14){
                     temp.shift()
                 }
                 
@@ -165,7 +164,7 @@ class Dispenser extends Component {
                     isLoaded: true,
                     temps: join
                 });
-                console.log(temp)
+                console.log(join)
             }).catch(err => console.log(err));
     }
 
