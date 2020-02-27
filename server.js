@@ -1,14 +1,11 @@
-//import express from 'express'
-//import Mocker from 'mockjs'
- 
 let express = require('express');
 let app = express();
 let Mock = require('mockjs');
 let bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended : false}));
-// app.use('/temp/', function(req, res){
-//     console.log(res.body)
-// })
+let timestamp = 0;
+let temp = 0;
+let id = 0;
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
@@ -17,23 +14,24 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.get('/', function(req, res){
-    res.send('hello')
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+app.post('/temp', function(req, res) {
+    timestamp = req.body.timestamp
+    temp = req.body.temp
+    console.log(req.body)
 })
 
-app.use('/temp',function(req, res){
-    res.json(Mock.mock([
-        {
-            "id":   "1", 
-            "timestamp":    "1576668793061", 
-            "temperature":  99.2
-        },
-        {
-            "id":   "2", 
-            "timestamp":    "1576668793061", 
-            "temperature":  90.2
-        }
-    ]))
+app.use('/temp', function(req, res) {
+    res.setHeader('Content-Type', 'application/json')
+    res.setHeader('Accept', 'application/json')
+    id ++
+    res.json({
+        "id": id,
+        "timestamp": timestamp,
+        "temp": temp
+    })    
 })
 
 app.use('/stock',function(req, res){
